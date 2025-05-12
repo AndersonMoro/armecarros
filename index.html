@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARMeCarros - Registro de Veículos</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-blue-600">ARMeCarros</h1>
+            <p class="text-xl text-gray-600">Registro de Veículos</p>
+        </header>
+
+        <main>
+            <form id="vehicleForm" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <div class="mb-6">
+                    <label for="plate" class="block text-xl font-bold mb-2 text-gray-700">Placa do Veículo</label>
+                    <input type="text" id="plate" name="plate" required 
+                           class="w-full px-4 py-3 text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+                           placeholder="ABC1234">
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-700">Fotos do Veículo</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="photo-container">
+                            <h3 class="text-lg mb-2 text-blue-600">Lateral Esquerda</h3>
+                            <div id="leftSidePhoto" class="photo-box">
+                                <input type="file" id="leftSideInput" accept="image/*" capture="environment" class="hidden">
+                                <button type="button" onclick="document.getElementById('leftSideInput').click()" 
+                                        class="w-full h-full flex items-center justify-center">
+                                    <span class="text-4xl text-blue-500">+</span>
+                                </button>
+                                <img id="leftSidePreview" class="preview-image hidden">
+                            </div>
+                        </div>
+                        <div class="photo-container">
+                            <h3 class="text-lg mb-2 text-blue-600">Lateral Direita</h3>
+                            <div id="rightSidePhoto" class="photo-box">
+                                <input type="file" id="rightSideInput" accept="image/*" capture="environment" class="hidden">
+                                <button type="button" onclick="document.getElementById('rightSideInput').click()" 
+                                        class="w-full h-full flex items-center justify-center">
+                                    <span class="text-4xl text-blue-500">+</span>
+                                </button>
+                                <img id="rightSidePreview" class="preview-image hidden">
+                            </div>
+                        </div>
+                        <div class="photo-container">
+                            <h3 class="text-lg mb-2 text-blue-600">Frente</h3>
+                            <div id="frontPhoto" class="photo-box">
+                                <input type="file" id="frontInput" accept="image/*" capture="environment" class="hidden">
+                                <button type="button" onclick="document.getElementById('frontInput').click()" 
+                                        class="w-full h-full flex items-center justify-center">
+                                    <span class="text-4xl text-blue-500">+</span>
+                                </button>
+                                <img id="frontPreview" class="preview-image hidden">
+                            </div>
+                        </div>
+                        <div class="photo-container">
+                            <h3 class="text-lg mb-2 text-blue-600">Traseira</h3>
+                            <div id="backPhoto" class="photo-box">
+                                <input type="file" id="backInput" accept="image/*" capture="environment" class="hidden">
+                                <button type="button" onclick="document.getElementById('backInput').click()" 
+                                        class="w-full h-full flex items-center justify-center">
+                                    <span class="text-4xl text-blue-500">+</span>
+                                </button>
+                                <img id="backPreview" class="preview-image hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-700">Checklist de Danos</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="scratch" name="damages" value="scratch" 
+                                   class="w-6 h-6 text-orange-500 focus:ring-orange-500">
+                            <label for="scratch" class="ml-2 text-lg">Arranhado na lateral</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="bumper" name="damages" value="bumper" 
+                                   class="w-6 h-6 text-orange-500 focus:ring-orange-500">
+                            <label for="bumper" class="ml-2 text-lg">Batida no para-choque</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="glass" name="damages" value="glass" 
+                                   class="w-6 h-6 text-orange-500 focus:ring-orange-500">
+                            <label for="glass" class="ml-2 text-lg">Vidro trincado</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="dent" name="damages" value="dent" 
+                                   class="w-6 h-6 text-orange-500 focus:ring-orange-500">
+                            <label for="dent" class="ml-2 text-lg">Amassado</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="notes" class="block text-xl font-bold mb-2 text-gray-700">Observações</label>
+                    <textarea id="notes" name="notes" rows="3" 
+                              class="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Observações adicionais sobre o veículo..."></textarea>
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-xl">
+                        Registrar Veículo
+                    </button>
+                    <a href="historico.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-xl flex items-center">
+                        Ver Histórico
+                    </a>
+                </div>
+            </form>
+        </main>
+
+        <footer class="text-center text-gray-500 mt-8">
+            <p>ARMeCarros &copy; 2023 - Todos os direitos reservados</p>
+        </footer>
+    </div>
+    <!-- Carregando a biblioteca Supabase primeiro -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Depois os scripts da aplicação -->
+    <script src="js/auth.js"></script>
+    <script src="js/vehicleStorage.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/main.js"></script>
+    
+    <div class="fixed bottom-4 right-4">
+        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm5 4a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+            </svg>
+            Sair
+        </button>
+    </div>
+</body>
+</html>
