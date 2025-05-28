@@ -4,9 +4,21 @@ body {
 }
 
 /* Estilos específicos para o logo */
+.logo-container {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f9ff;
+    border-radius: 50%;
+    border: 2px solid #e0e7ff;
+}
+
 .logo-container img {
-    width: 96px !important;
-    height: 96px !important;
+    width: 80px !important;
+    height: 80px !important;
     object-fit: contain;
     display: block;
     margin: 0 auto;
@@ -14,12 +26,31 @@ body {
 
 /* Garantir que o logo seja visível */
 img[alt="ARMeCarros Logo"] {
-    max-width: 96px;
-    max-height: 96px;
+    max-width: 80px;
+    max-height: 80px;
     width: auto;
     height: auto;
     object-fit: contain;
     background: transparent;
+}
+
+/* Fallback quando a imagem não carregar */
+.logo-container::before {
+    content: "🚗";
+    font-size: 48px;
+    display: none;
+}
+
+.logo-container img[src=""],
+.logo-container img:not([src]) {
+    display: none;
+}
+
+.logo-container img[src=""]:before,
+.logo-container img:not([src]):before {
+    content: "🚗";
+    font-size: 48px;
+    display: block;
 }
 
 .photo-box {
