@@ -11,7 +11,9 @@
     <div class="container mx-auto px-4 py-8">
         <header class="mb-8 text-center">
             <div class="flex flex-col items-center mb-4">
-                <img src="attached_assets/ARMeCarros_novo_logo.png" alt="ARMeCarros Logo" class="w-24 h-24 mb-4">
+                <div class="logo-container mb-4">
+                    <img src="attached_assets/ARMeCarros_novo_logo.png" alt="ARMeCarros Logo" onerror="console.error('Erro ao carregar logo:', this.src)">
+                </div>
                 <h1 class="text-4xl font-bold text-blue-600">ARMeCarros</h1>
             </div>
             <p class="text-xl text-gray-600">Registro de Veículos</p>
