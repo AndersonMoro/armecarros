@@ -10,7 +10,7 @@ if (typeof window._supabase === 'undefined') {
 }
 
 // Usar o Supabase já inicializado globalmente
-const _supabase = window.supabase;
+const _supabase = window._supabase;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar se o usuário já está logado

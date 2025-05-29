@@ -6,18 +6,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoImages = document.querySelectorAll('img[alt="ARMeCarros Logo"]');
     
     logoImages.forEach(img => {
-        // Remover listeners existentes para evitar duplicação
-        img.removeEventListener('error', handleLogoError);
-        img.addEventListener('error', handleLogoError);
+        // Tentar diferentes caminhos para o logo
+        const logoPaths = [
+            'attached_assets/ARMeCarros_novo_logo.png',
+            './attached_assets/ARMeCarros_novo_logo.png',
+            'attached_assets/ARMeCarros_logo_estilo2025.png',
+            './attached_assets/ARMeCarros_logo_estilo2025.png'
+        ];
         
-        // Verificar se a imagem já carregou ou falhou
-        if (img.complete && img.naturalHeight === 0) {
-            handleLogoError.call(img);
-        } else if (!img.complete) {
-            // Tentar recarregar se ainda não terminou
-            const originalSrc = img.src.split('?')[0];
-            img.src = originalSrc + '?t=' + Date.now();
+        let currentPathIndex = 0;
+        
+        function tryNextPath() {
+            if (currentPathIndex < logoPaths.length) {
+                img.src = logoPaths[currentPathIndex];
+                currentPathIndex++;
+            } else {
+                // Se todos os caminhos falharam, usar fallback
+                handleLogoError.call(img);
+            }
         }
+        
+        // Remover listeners existentes para evitar duplicação
+        img.removeEventListener('error', tryNextPath);
+        img.addEventListener('error', tryNextPath);
+        
+        // Começar tentando o primeiro caminho
+        tryNextPath();
     });
     
     function handleLogoError() {

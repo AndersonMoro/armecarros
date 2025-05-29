@@ -10,7 +10,7 @@ try {
     if (typeof supabase !== 'undefined') {
         _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log('Supabase Client Initialized:', _supabase);
-        
+
         // Verificar autenticação
         _supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_OUT' && !window.location.pathname.includes('login.html')) {
@@ -41,35 +41,35 @@ const vehicleStorage = {
                 console.error('Supabase não está disponível para upload de imagem');
                 return null;
             }
-            
+
             // Remover o prefixo "data:image/jpeg;base64," da string base64
             const base64Data = base64Image.split(',')[1];
-            
+
             // Converter base64 para Blob
             const byteCharacters = atob(base64Data);
             const byteArrays = [];
-            
+
             for (let offset = 0; offset < byteCharacters.length; offset += 512) {
                 const slice = byteCharacters.slice(offset, offset + 512);
-                
+
                 const byteNumbers = new Array(slice.length);
                 for (let i = 0; i < slice.length; i++) {
                     byteNumbers[i] = slice.charCodeAt(i);
                 }
-                
+
                 const byteArray = new Uint8Array(byteNumbers);
                 byteArrays.push(byteArray);
             }
-            
+
             const blob = new Blob(byteArrays, {type: 'image/jpeg'});
             const file = new File([blob], fileName, {type: 'image/jpeg'});
-            
+
             // Obter o usuário atual para criar uma pasta específica
             const { data: { user } } = await _supabase.auth.getUser();
             const userId = user ? user.id : 'anonymous';
             const timestamp = new Date().getTime();
             const filePath = `vehicles/${userId}/${timestamp}_${fileName}`;
-            
+
             // Fazer upload para o Supabase Storage
             const { data, error } = await _supabase
                 .storage
@@ -78,44 +78,45 @@ const vehicleStorage = {
                     cacheControl: '3600',
                     upsert: false
                 });
-                
+
             if (error) {
                 console.error('Erro ao fazer upload da imagem:', error);
                 return null;
             }
-            
+
             // Obter a URL pública da imagem
             const { data: { publicUrl } } = _supabase
                 .storage
                 .from('vehicle-images')
                 .getPublicUrl(filePath);
-                
+
             return publicUrl;
         } catch (error) {
             console.error('Falha ao fazer upload da imagem:', error);
             return null;
         }
     },
-    
+
     /**
      * Salva os dados de um veículo no Supabase ou localStorage (fallback).
      */
     async saveVehicle(vehicleData) {
         try {
             // Verificar se o usuário está autenticado
+            const _supabase = window._supabase;
             const { data: { user } } = await _supabase.auth.getUser();
-            
+
             console.log('Usuário autenticado:', user);
-            
+
             if (!user && _supabase) {
                 console.error('Usuário não autenticado');
                 window.location.href = 'login.html';
                 return null;
             }
-            
+
             // Fazer upload das imagens e obter URLs
             let photoUrls = null;
-            
+
             if (_supabase && vehicleData.photos) {
                 photoUrls = {
                     leftSide: await this.uploadImage(vehicleData.photos.leftSide, 'left-side.jpg'),
@@ -123,10 +124,10 @@ const vehicleStorage = {
                     front: await this.uploadImage(vehicleData.photos.front, 'front.jpg'),
                     back: await this.uploadImage(vehicleData.photos.back, 'back.jpg')
                 };
-                
+
                 console.log('URLs das fotos após upload:', photoUrls);
             }
-            
+
             // Adiciona um timestamp do momento do salvamento, se não existir
             const dataToSave = {
                 plate: vehicleData.plate,
@@ -136,7 +137,7 @@ const vehicleStorage = {
                 timestamp: vehicleData.timestamp || new Date().toISOString(),
                 user_id: user ? user.id : null // Adicionar ID do usuário
             };
-            
+
             console.log('Tentando salvar veículo com dados:', dataToSave);
 
             // Se o Supabase estiver disponível, use-o
@@ -150,7 +151,7 @@ const vehicleStorage = {
                     console.error('Erro ao salvar veículo no Supabase:', error);
                     throw error;
                 }
-                
+
                 console.log('Veículo salvo no Supabase:', data);
                 return data[0];
             } else {
@@ -174,20 +175,21 @@ const vehicleStorage = {
             return null;
         }
     },
-    
+
     /**
      * Obtém todos os veículos registrados hoje.
      */
     async getTodayVehicles() {
         try {
             // Verificar se o usuário está autenticado
+            const _supabase = window._supabase;
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user && _supabase) {
                 console.error('Usuário não autenticado');
                 window.location.href = 'login.html';
                 return [];
             }
-            
+
             const today = new Date();
             const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString();
             const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, -1).toISOString();
@@ -228,13 +230,14 @@ const vehicleStorage = {
     async getAllVehicles() {
         try {
             // Verificar se o usuário está autenticado
+            const _supabase = window._supabase;
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user && _supabase) {
                 console.error('Usuário não autenticado');
                 window.location.href = 'login.html';
                 return [];
             }
-            
+
             if (_supabase) {
                 const { data, error } = await _supabase
                     .from('vehicles')
