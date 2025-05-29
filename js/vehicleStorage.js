@@ -4,11 +4,15 @@
 // const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNva2NhZ3duemZ4aGt4cnNkaGhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3OTkzOTgsImV4cCI6MjA2MjM3NTM5OH0.Te2eX6djMPJSbHwGJ_oA9y60ntcJsLyzDq1SAybzfgg'; 
 
 // Inicializar o cliente Supabase usando as constantes já declaradas em auth.js
-// Inicializar o cliente Supabase
+// Usar a instância global do Supabase se já existir
 let _supabase;
 try {
-    if (typeof supabase !== 'undefined') {
+    if (typeof window._supabase !== 'undefined') {
+        _supabase = window._supabase;
+        console.log('Usando Supabase Client global:', _supabase);
+    } else if (typeof supabase !== 'undefined') {
         _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        window._supabase = _supabase;
         console.log('Supabase Client Initialized:', _supabase);
 
         // Verificar autenticação
