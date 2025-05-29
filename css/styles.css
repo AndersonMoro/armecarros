@@ -5,8 +5,8 @@ body {
 
 /* Estilos específicos para o logo */
 .logo-container {
-    width: 96px;
-    height: 96px;
+    width: 140px;
+    height: 140px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -17,8 +17,8 @@ body {
 }
 
 .logo-container img {
-    width: 80px !important;
-    height: 80px !important;
+    width: 120px !important;
+    height: 120px !important;
     object-fit: contain;
     display: block;
     margin: 0 auto;
@@ -26,8 +26,8 @@ body {
 
 /* Garantir que o logo seja visível */
 img[alt="ARMeCarros Logo"] {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 140px;
+    max-height: 140px;
     width: auto;
     height: auto;
     object-fit: cover;
@@ -37,25 +37,25 @@ img[alt="ARMeCarros Logo"] {
 /* Fallback quando a imagem não carregar */
 .logo-fallback {
     color: #3b82f6;
-    font-size: 48px !important;
+    font-size: 64px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 80px !important;
-    height: 80px !important;
+    width: 120px !important;
+    height: 120px !important;
     text-align: center !important;
 }
 
 /* Melhorar a aparência quando o logo não carrega */
 .logo-container:empty::before {
     content: "🚗";
-    font-size: 48px;
+    font-size: 64px;
     color: #3b82f6;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
 }
 
 .photo-box {
@@ -111,8 +111,13 @@ img[alt="ARMeCarros Logo"] {
         height: 150px;
     }
 
+    .logo-container {
+        width: 120px;
+        height: 120px;
+    }
+
     .logo-container img {
-        width: 72px !important;
-        height: 72px !important;
+        width: 100px !important;
+        height: 100px !important;
     }
 }
