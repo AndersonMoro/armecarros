@@ -9,7 +9,8 @@ if (typeof window._supabase === 'undefined') {
     console.log('Supabase Auth Client Initialized');
 }
 
-const _supabase = window._supabase;
+// Usar o Supabase já inicializado globalmente
+const _supabase = window.supabase;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar se o usuário já está logado

@@ -10,9 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
         img.removeEventListener('error', handleLogoError);
         img.addEventListener('error', handleLogoError);
         
-        // Tentar carregar a imagem imediatamente
-        if (img.src && !img.complete) {
-            // Adicionar timestamp para evitar cache
+        // Verificar se a imagem já carregou ou falhou
+        if (img.complete && img.naturalHeight === 0) {
+            handleLogoError.call(img);
+        } else if (!img.complete) {
+            // Tentar recarregar se ainda não terminou
             const originalSrc = img.src.split('?')[0];
             img.src = originalSrc + '?t=' + Date.now();
         }

@@ -1,0 +1,18 @@
+
+# Configuração para servir arquivos estáticos
+<Files ~ "\.(png|jpg|jpeg|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=86400"
+</Files>
+
+# MIME types
+AddType image/png .png
+AddType image/jpeg .jpg .jpeg
+AddType image/gif .gif
+AddType image/svg+xml .svg
+
+# Permitir acesso aos arquivos de assets
+<Directory "attached_assets/">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
