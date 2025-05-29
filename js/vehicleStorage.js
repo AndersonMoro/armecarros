@@ -107,7 +107,7 @@ const vehicleStorage = {
     async saveVehicle(vehicleData) {
         try {
             // Verificar se o usuário está autenticado
-            const _supabase = window._supabase;
+            const _supabase = getSupabaseClient();
             const { data: { user } } = await _supabase.auth.getUser();
 
             console.log('Usuário autenticado:', user);
@@ -186,7 +186,7 @@ const vehicleStorage = {
     async getTodayVehicles() {
         try {
             // Verificar se o usuário está autenticado
-            const _supabase = window._supabase;
+            const _supabase = getSupabaseClient();
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user && _supabase) {
                 console.error('Usuário não autenticado');
@@ -234,7 +234,7 @@ const vehicleStorage = {
     async getAllVehicles() {
         try {
             // Verificar se o usuário está autenticado
-            const _supabase = window._supabase;
+            const _supabase = getSupabaseClient();
             const { data: { user } } = await _supabase.auth.getUser();
             if (!user && _supabase) {
                 console.error('Usuário não autenticado');
