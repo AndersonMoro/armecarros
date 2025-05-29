@@ -35,8 +35,8 @@ async function loadLogoFromSupabase(imgElement) {
         // Tentar obter a URL pública do logo do Supabase Storage
         const { data } = _supabase
             .storage
-            .from('app-assets')
-            .getPublicUrl('logo/ARMeCarros_novo_logo.png');
+            .from('logo')
+            .getPublicUrl('ARMeCarros_novo_logo.png');
 
         if (data && data.publicUrl) {
             console.log('Tentando carregar logo do Supabase:', data.publicUrl);
@@ -141,11 +141,11 @@ window.checkLogoInSupabase = async function() {
 
         const _supabase = window._supabase;
         
-        // Listar arquivos no bucket app-assets/logo
+        // Listar arquivos no bucket logo
         const { data, error } = await _supabase
             .storage
-            .from('app-assets')
-            .list('logo', {
+            .from('logo')
+            .list('', {
                 limit: 100,
                 offset: 0
             });
@@ -165,8 +165,8 @@ window.checkLogoInSupabase = async function() {
             // Obter URL pública
             const { data: urlData } = _supabase
                 .storage
-                .from('app-assets')
-                .getPublicUrl('logo/ARMeCarros_novo_logo.png');
+                .from('logo')
+                .getPublicUrl('ARMeCarros_novo_logo.png');
             
             console.log('URL pública do logo:', urlData.publicUrl);
         } else {
@@ -203,8 +203,8 @@ window.uploadLogoToSupabase = async function() {
         // Fazer upload para o Supabase Storage
         const { data, error } = await _supabase
             .storage
-            .from('app-assets')
-            .upload('logo/ARMeCarros_novo_logo.png', blob, {
+            .from('logo')
+            .upload('ARMeCarros_novo_logo.png', blob, {
                 cacheControl: '3600',
                 upsert: true
             });

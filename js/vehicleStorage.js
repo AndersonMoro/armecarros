@@ -41,6 +41,7 @@ const vehicleStorage = {
      */
     async uploadImage(base64Image, fileName) {
         try {
+            const _supabase = getSupabaseClient();
             if (!_supabase) {
                 console.error('Supabase não está disponível para upload de imagem');
                 return null;
