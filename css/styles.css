@@ -26,11 +26,11 @@ body {
 
 /* Garantir que o logo seja visível */
 img[alt="ARMeCarros Logo"] {
-    max-width: 80px;
-    max-height: 80px;
+    max-width: 100px;
+    max-height: 100px;
     width: auto;
     height: auto;
-    object-fit: contain;
+    object-fit: cover;
     background: transparent;
 }
 
