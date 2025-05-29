@@ -35,22 +35,27 @@ img[alt="ARMeCarros Logo"] {
 }
 
 /* Fallback quando a imagem não carregar */
-.logo-container::before {
-    content: "🚗";
-    font-size: 48px;
-    display: none;
+.logo-fallback {
+    color: #3b82f6;
+    font-size: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 80px !important;
+    height: 80px !important;
+    text-align: center !important;
 }
 
-.logo-container img[src=""],
-.logo-container img:not([src]) {
-    display: none;
-}
-
-.logo-container img[src=""]:before,
-.logo-container img:not([src]):before {
+/* Melhorar a aparência quando o logo não carrega */
+.logo-container:empty::before {
     content: "🚗";
     font-size: 48px;
-    display: block;
+    color: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
 }
 
 .photo-box {

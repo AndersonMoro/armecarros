@@ -1,47 +1,42 @@
 // Configuração do Supabase
-const SUPABASE_URL = 'https://cokcagwnzfxhkxrsdhhs.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNva2NhZ3duemZ4aGt4cnNkaGhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3OTkzOTgsImV4cCI6MjA2MjM3NTM5OH0.Te2eX6djMPJSbHwGJ_oA9y60ntcJsLyzDq1SAybzfgg'; 
+const SUPABASE_URL = 'https://cokcagwnzfxhkxrsdhhs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNva2NhZ3duemZ4aGt4cnNkaGhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3OTkzOTgsImV4cCI6MjA2MjM3NTM5OH0.Te2eX6djMPJSbHwGJ_oA9y60ntcJsLyzDq1SAybzfgg';
 
-// Inicializar o cliente Supabase
-let supabaseAuth;
-try {
-    if (typeof supabase !== 'undefined') {
-        const { createClient } = supabase;
-        supabaseAuth = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('Supabase Auth Client Initialized');
-    } else {
-        console.error('Biblioteca Supabase não encontrada. Verifique se o script foi carregado corretamente.');
-    }
-} catch (error) {
-    console.error('Erro ao inicializar Supabase Auth:', error);
+// Usar instância global do Supabase se já existir
+if (typeof window._supabase === 'undefined') {
+    const { createClient } = supabase;
+    window._supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase Auth Client Initialized');
 }
+
+const _supabase = window._supabase;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar se o usuário já está logado
     checkAuthState();
-    
+
     // Configurar formulário de login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
-    
+
     // Configurar botão e modal de registro
     const registerButton = document.getElementById('registerButton');
     const registerModal = document.getElementById('registerModal');
     const closeRegisterModal = document.getElementById('closeRegisterModal');
-    
+
     if (registerButton && registerModal) {
         registerButton.addEventListener('click', () => {
             registerModal.classList.remove('hidden');
         });
     }
-    
+
     if (closeRegisterModal && registerModal) {
         closeRegisterModal.addEventListener('click', () => {
             registerModal.classList.add('hidden');
         });
-        
+
         // Fechar modal ao clicar fora
         registerModal.addEventListener('click', (e) => {
             if (e.target === registerModal) {
@@ -49,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Configurar formulário de registro
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
@@ -62,14 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 async function checkAuthState() {
     try {
-        const { data: { user } } = await supabaseAuth.auth.getUser();
-        
+        const { data: { user } } = await _supabase.auth.getUser();
+
         // Se estamos na página de login e o usuário está autenticado, redirecionar para a página principal
         if (user && window.location.pathname.includes('login.html')) {
             window.location.href = 'index.html';
             return;
         }
-        
+
         // Se não estamos na página de login e o usuário não está autenticado, redirecionar para login
         if (!user && !window.location.pathname.includes('login.html')) {
             window.location.href = 'login.html';
@@ -89,23 +84,23 @@ async function checkAuthState() {
  */
 async function handleLogin(event) {
     event.preventDefault();
-    
+
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const errorElement = document.getElementById('loginError');
-    
+
     try {
-        const { data, error } = await supabaseAuth.auth.signInWithPassword({
+        const { data, error } = await _supabase.auth.signInWithPassword({
             email,
             password
         });
-        
+
         if (error) {
             errorElement.textContent = 'Erro ao fazer login: ' + error.message;
             errorElement.classList.remove('hidden');
             return;
         }
-        
+
         // Login bem-sucedido, redirecionar para a página principal
         window.location.href = 'index.html';
     } catch (error) {
@@ -120,34 +115,34 @@ async function handleLogin(event) {
  */
 async function handleRegister(event) {
     event.preventDefault();
-    
+
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     const errorElement = document.getElementById('registerError');
-    
+
     // Validação básica
     if (password.length < 6) {
         errorElement.textContent = 'A senha deve ter pelo menos 6 caracteres.';
         errorElement.classList.remove('hidden');
         return;
     }
-    
+
     try {
-        const { data, error } = await supabaseAuth.auth.signUp({
+        const { data, error } = await _supabase.auth.signUp({
             email,
             password
         });
-        
+
         if (error) {
             errorElement.textContent = 'Erro ao criar conta: ' + error.message;
             errorElement.classList.remove('hidden');
             return;
         }
-        
+
         // Registro bem-sucedido
         alert('Conta criada com sucesso! Você já pode fazer login.');
         document.getElementById('registerModal').classList.add('hidden');
-        
+
         // Limpar formulário
         document.getElementById('registerForm').reset();
     } catch (error) {
@@ -162,13 +157,13 @@ async function handleRegister(event) {
  */
 async function logout() {
     try {
-        const { error } = await supabaseAuth.auth.signOut();
-        
+        const { error } = await _supabase.auth.signOut();
+
         if (error) {
             console.error('Erro ao fazer logout:', error);
             return;
         }
-        
+
         // Redirecionar para a página de login
         window.location.href = 'login.html';
     } catch (error) {
