@@ -11,55 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
- * Carrega o logo do Supabase Storage
+ * Carrega o logo dos arquivos locais
  */
 async function loadLogoFromSupabase(imgElement) {
-    try {
-        // Aguardar o Supabase estar disponível
-        let attempts = 0;
-        const maxAttempts = 10;
-        
-        while (attempts < maxAttempts && typeof window._supabase === 'undefined') {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            attempts++;
-        }
-
-        if (typeof window._supabase === 'undefined') {
-            console.warn('Supabase não disponível após tentativas, usando caminhos locais');
-            tryLocalPaths(imgElement);
-            return;
-        }
-
-        const _supabase = window._supabase;
-        
-        // Tentar obter a URL pública do logo do Supabase Storage
-        const { data } = _supabase
-            .storage
-            .from('logo')
-            .getPublicUrl('ARMeCarros_novo_logo.png');
-
-        if (data && data.publicUrl) {
-            console.log('Tentando carregar logo do Supabase:', data.publicUrl);
-            
-            // Criar uma nova imagem para testar se carrega
-            const testImg = new Image();
-            testImg.onload = function() {
-                console.log('Logo do Supabase carregado com sucesso');
-                imgElement.src = data.publicUrl;
-            };
-            testImg.onerror = function() {
-                console.warn('Logo do Supabase falhou no teste, tentando caminhos locais');
-                tryLocalPaths(imgElement);
-            };
-            testImg.src = data.publicUrl;
-        } else {
-            console.warn('URL do logo não encontrada no Supabase, tentando caminhos locais');
-            tryLocalPaths(imgElement);
-        }
-    } catch (error) {
-        console.error('Erro ao carregar logo do Supabase:', error);
-        tryLocalPaths(imgElement);
-    }
+    console.log('Carregando logo local LOGO CARROS-01.png');
+    tryLocalPaths(imgElement);
 }
 
 /**
@@ -67,6 +23,8 @@ async function loadLogoFromSupabase(imgElement) {
  */
 function tryLocalPaths(imgElement) {
     const logoPaths = [
+        'attached_assets/LOGO CARROS-01.png',
+        './attached_assets/LOGO CARROS-01.png',
         'attached_assets/ARMeCarros_novo_logo.png',
         './attached_assets/ARMeCarros_novo_logo.png',
         'attached_assets/ARMeCarros_logo_estilo2025.png',

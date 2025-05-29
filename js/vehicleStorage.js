@@ -3,33 +3,9 @@
 // const SUPABASE_URL = 'https://cokcagwnzfxhkxrsdhhs.supabase.co'; 
 // const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNva2NhZ3duemZ4aGt4cnNkaGhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3OTkzOTgsImV4cCI6MjA2MjM3NTM5OH0.Te2eX6djMPJSbHwGJ_oA9y60ntcJsLyzDq1SAybzfgg'; 
 
-// Inicializar o cliente Supabase usando as constantes já declaradas em auth.js
-// Usar a instância global do Supabase se já existir
-let _supabase;
-try {
-    if (typeof window._supabase !== 'undefined') {
-        _supabase = window._supabase;
-        console.log('Usando Supabase Client global:', _supabase);
-    } else if (typeof supabase !== 'undefined') {
-        _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        window._supabase = _supabase;
-        console.log('Supabase Client Initialized:', _supabase);
-
-        // Verificar autenticação
-        _supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_OUT' && !window.location.pathname.includes('login.html')) {
-                // Redirecionar para login se o usuário for desconectado
-                window.location.href = 'login.html';
-            }
-        });
-    } else {
-        console.error('Biblioteca Supabase não encontrada. Verifique se o script foi carregado corretamente.');
-        // Fallback para localStorage temporariamente
-        _supabase = null;
-    }
-} catch (error) {
-    console.error('Erro ao inicializar Supabase:', error);
-    _supabase = null;
+// Função para obter o cliente Supabase
+function getSupabaseClient() {
+    return window._supabase || null;
 }
 
 const vehicleStorage = {
