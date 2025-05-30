@@ -97,6 +97,21 @@ img[alt="ARMeCarros Logo"] {
     z-index: 1000;
 }
 
+/* PWA Specific Styles */
+.pwa-mode {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pwa-mode .container {
+    padding-top: 20px;
+}
+
+/* Instalação PWA */
+#network-status {
+    transition: all 0.3s ease;
+}
+
 /* Responsividade para mobile */
 @media (max-width: 768px) {
     .grid-cols-2 {
@@ -119,5 +134,10 @@ img[alt="ARMeCarros Logo"] {
     .logo-container img {
         width: 100px !important;
         height: 100px !important;
+    }
+    
+    /* PWA mobile adjustments */
+    .pwa-mode .container {
+        padding-top: 10px;
     }
 }
