@@ -79,6 +79,39 @@ const vehicleStorage = {
     },
 
     /**
+     * Verifica se uma placa já existe no banco de dados
+     * @param {string} plate - Placa do veículo
+     * @returns {Promise<boolean>} - True se a placa já existe
+     */
+    async checkPlateExists(plate) {
+        try {
+            const _supabase = getSupabaseClient();
+            
+            if (_supabase) {
+                const { data, error } = await _supabase
+                    .from('vehicles')
+                    .select('id')
+                    .eq('plate', plate.toUpperCase())
+                    .limit(1);
+
+                if (error) {
+                    console.error('Erro ao verificar placa:', error);
+                    return false;
+                }
+
+                return data && data.length > 0;
+            } else {
+                // Fallback para localStorage
+                const vehicles = JSON.parse(localStorage.getItem('vehicles') || '[]');
+                return vehicles.some(vehicle => vehicle.plate === plate.toUpperCase());
+            }
+        } catch (error) {
+            console.error('Falha ao verificar placa:', error);
+            return false;
+        }
+    },
+
+    /**
      * Salva os dados de um veículo no Supabase ou localStorage (fallback).
      */
     async saveVehicle(vehicleData) {
@@ -95,16 +128,31 @@ const vehicleStorage = {
                 return null;
             }
 
-            // Fazer upload das imagens e obter URLs
-            let photoUrls = null;
+            // Verificar se a placa já existe
+            const plateExists = await this.checkPlateExists(vehicleData.plate);
+            if (plateExists) {
+                throw new Error(`A placa ${vehicleData.plate} já está registrada no sistema.`);
+            }
+
+            // Fazer upload das imagens disponíveis e obter URLs
+            let photoUrls = {};
 
             if (_supabase && vehicleData.photos) {
-                photoUrls = {
-                    leftSide: await this.uploadImage(vehicleData.photos.leftSide, 'left-side.jpg'),
-                    rightSide: await this.uploadImage(vehicleData.photos.rightSide, 'right-side.jpg'),
-                    front: await this.uploadImage(vehicleData.photos.front, 'front.jpg'),
-                    back: await this.uploadImage(vehicleData.photos.back, 'back.jpg')
+                const photoMapping = {
+                    'leftSide': 'left-side.jpg',
+                    'rightSide': 'right-side.jpg',
+                    'front': 'front.jpg',
+                    'back': 'back.jpg'
                 };
+
+                for (const [key, fileName] of Object.entries(photoMapping)) {
+                    if (vehicleData.photos[key]) {
+                        const uploadedUrl = await this.uploadImage(vehicleData.photos[key], fileName);
+                        if (uploadedUrl) {
+                            photoUrls[key] = uploadedUrl;
+                        }
+                    }
+                }
 
                 console.log('URLs das fotos após upload:', photoUrls);
             }

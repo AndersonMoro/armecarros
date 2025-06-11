@@ -14,15 +14,15 @@ document.addEventListener('DOMContentLoaded', function() {
     async function handleFormSubmit(event) { // 1. Tornar a função async
         event.preventDefault();
         
-        // Validar se todas as fotos foram adicionadas
-        const requiredPhotos = ['leftSidePreview', 'rightSidePreview', 'frontPreview', 'backPreview'];
-        const missingPhotos = requiredPhotos.filter(id => {
+        // Validar se pelo menos uma foto foi adicionada
+        const photoIds = ['leftSidePreview', 'rightSidePreview', 'frontPreview', 'backPreview'];
+        const addedPhotos = photoIds.filter(id => {
             const preview = document.getElementById(id);
-            return preview.classList.contains('hidden');
+            return !preview.classList.contains('hidden') && preview.src;
         });
         
-        if (missingPhotos.length > 0) {
-            alert('Por favor, adicione todas as fotos obrigatórias do veículo.');
+        if (addedPhotos.length === 0) {
+            alert('Por favor, adicione pelo menos uma foto do veículo.');
             return;
         }
         
@@ -34,13 +34,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const damageCheckboxes = document.querySelectorAll('input[name="damages"]:checked');
         const damages = Array.from(damageCheckboxes).map(checkbox => checkbox.value);
         
-        // Coletar fotos (ainda como base64)
-        const photos = {
-            leftSide: document.getElementById('leftSidePreview').src,
-            rightSide: document.getElementById('rightSidePreview').src,
-            front: document.getElementById('frontPreview').src,
-            back: document.getElementById('backPreview').src
+        // Coletar apenas as fotos que foram adicionadas
+        const photos = {};
+        const photoMapping = {
+            'leftSidePreview': 'leftSide',
+            'rightSidePreview': 'rightSide', 
+            'frontPreview': 'front',
+            'backPreview': 'back'
         };
+        
+        Object.keys(photoMapping).forEach(previewId => {
+            const preview = document.getElementById(previewId);
+            if (!preview.classList.contains('hidden') && preview.src) {
+                photos[photoMapping[previewId]] = preview.src;
+            }
+        });
         
         // Criar objeto com dados do veículo
         const vehicleData = {
